@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Status Projek – Rapid KL BPL</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --red:       #E31937;
+    --blue:      #0F3460;
+    --dark:      #0D0D1A;
+    --white:     #FFFFFF;
+    --offwhite:  rgba(255,255,255,0.88);
+    --muted:     rgba(255,255,255,0.50);
+    --border:    rgba(255,255,255,0.14);
+    --card-bg:   rgba(10,14,30,0.62);
+    --card-hover:rgba(10,14,30,0.82);
+    --glass-border: rgba(255,255,255,0.18);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:'Inter',sans-serif;overflow:hidden}
+
+  /* ── HERO ──────────────────────────────────────────── */
+  .hero{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+  .hero-bg{
+    position:absolute;inset:0;
+    background:url('RAPIDKL.jpg') center center / cover no-repeat;
+    z-index:0;
+    filter:brightness(0.68) saturate(0.85);
+    transform:scale(1.04);
+    animation:bgDrift 22s ease-in-out infinite alternate;
+  }
+  @keyframes bgDrift{
+    from{transform:scale(1.04) translateX(0px)}
+    to  {transform:scale(1.09) translateX(-14px)}
+  }
+
+  .hero-overlay{
+    position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,
+      rgba(4,7,18,0.85)  0%,
+      rgba(4,7,18,0.32) 36%,
+      rgba(4,7,18,0.32) 56%,
+      rgba(4,7,18,0.90) 100%
+    );
+  }
+
+  .accent-line{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),#ff6b85,var(--red));z-index:10}
+
+  /* ── NAVBAR ────────────────────────────────────────── */
+  nav{
+    position:relative;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 48px;height:72px;
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:rgba(4,7,18,0.48);
+    flex-shrink:0;
+  }
+  .nav-brand{display:flex;align-items:center;gap:16px}
+  .nav-logo-wrap{
+    background:#fff;border-radius:8px;padding:6px 14px;height:46px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 12px rgba(0,0,0,0.35);flex-shrink:0;
+  }
+  .nav-logo-wrap img{height:26px;width:auto;display:block;object-fit:contain}
+  .nav-vdiv{width:1px;height:32px;background:var(--border)}
+  .nav-text-main{font-size:14px;font-weight:700;color:var(--white);letter-spacing:-0.1px;line-height:1.2}
+  .nav-text-sub{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:1px}
+  .nav-right{display:flex;align-items:center;gap:20px}
+  .nav-unit{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+  .nav-unit-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
+  .nav-unit-val{font-size:12px;font-weight:700;color:var(--offwhite);letter-spacing:0.2px}
+  .nav-sep{width:1px;height:28px;background:var(--border)}
+  .nav-date{font-size:12px;color:var(--muted);text-align:right;line-height:1.4}
+  .nav-date strong{display:block;color:var(--offwhite);font-size:13px;font-weight:600}
+
+  /* ── HERO BODY ─────────────────────────────────────── */
+  .hero-body{
+    position:relative;z-index:10;flex:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:0 32px 32px;
+  }
+  .eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .eyebrow-line{width:30px;height:1.5px;background:var(--red)}
+  .eyebrow-text{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+  .hero-headline{
+    font-size:clamp(26px,3.8vw,46px);font-weight:900;color:var(--white);
+    text-align:center;line-height:1.12;letter-spacing:-1px;
+    margin-bottom:12px;max-width:680px;
+  }
+  .hero-headline em{font-style:normal;color:var(--red)}
+  .hero-sub{
+    font-size:clamp(12px,1.3vw,14px);color:var(--muted);text-align:center;
+    max-width:480px;line-height:1.7;margin-bottom:44px;font-weight:400;
+  }
+
+  /* ── CARDS ─────────────────────────────────────────── */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:800px}
+
+  .dash-card{
+    position:relative;
+    background:var(--card-bg);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    padding:28px 28px 24px;
+    text-decoration:none;
+    display:flex;flex-direction:column;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    overflow:hidden;
+    transition:background .3s,border-color .3s,transform .3s,box-shadow .3s;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.09),0 8px 32px rgba(0,0,0,0.35);
+  }
+  .dash-card:hover{
+    background:var(--card-hover);
+    border-color:rgba(255,255,255,0.26);
+    transform:translateY(-5px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),0 24px 56px rgba(0,0,0,0.5);
+  }
+  .dash-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;
+  }
+  .dash-card.lrt3::before{background:linear-gradient(90deg,#E31937,#ff6b85)}
+  .dash-card.ev::before  {background:linear-gradient(90deg,#3498DB,#9B59B6)}
+
+  .card-icon{
+    width:48px;height:48px;border-radius:13px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;margin-bottom:18px;flex-shrink:0;
+  }
+  .dash-card.lrt3 .card-icon{background:rgba(227,25,55,0.18);border:1px solid rgba(227,25,55,0.3)}
+  .dash-card.ev   .card-icon{background:rgba(52,152,219,0.18);border:1px solid rgba(52,152,219,0.3)}
+
+  .card-tag{
+    font-size:10px;font-weight:700;text-transform:uppercase;
+    letter-spacing:1.2px;margin-bottom:7px;display:inline-block;
+  }
+  .dash-card.lrt3 .card-tag{color:#ff8099}
+  .dash-card.ev   .card-tag{color:#7ec8f5}
+
+  .card-title{font-size:17px;font-weight:800;color:var(--white);line-height:1.25;letter-spacing:-0.3px;margin-bottom:8px}
+  .card-desc{font-size:12px;color:var(--muted);line-height:1.65;flex:1;margin-bottom:20px}
+
+  .card-stats{
+    display:flex;gap:18px;margin-bottom:22px;
+    padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  }
+  .cs-val{font-size:20px;font-weight:800;color:var(--white);line-height:1;letter-spacing:-0.5px}
+  .cs-lbl{font-size:10px;color:var(--muted);font-weight:500;margin-top:2px}
+
+  .card-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 18px;border-radius:8px;
+    font-size:12px;font-weight:700;letter-spacing:0.2px;
+    border:1px solid;transition:background .2s,color .2s;
+    align-self:flex-start;white-space:nowrap;
+  }
+  .dash-card.lrt3 .card-btn{background:rgba(227,25,55,0.15);border-color:rgba(227,25,55,0.4);color:#ff8099}
+  .dash-card.lrt3:hover .card-btn{background:rgba(227,25,55,0.28);border-color:rgba(227,25,55,0.65);color:#fff}
+  .dash-card.ev .card-btn{background:rgba(52,152,219,0.15);border-color:rgba(52,152,219,0.4);color:#7ec8f5}
+  .dash-card.ev:hover .card-btn{background:rgba(52,152,219,0.28);border-color:rgba(52,152,219,0.65);color:#fff}
+
+  .btn-arrow{font-size:14px;transition:transform .2s}
+  .dash-card:hover .btn-arrow{transform:translateX(4px)}
+
+  /* ── FOOTER STRIP ──────────────────────────────────── */
+  .hero-footer{
+    position:relative;z-index:10;
+    display:flex;align-items:center;justify-content:center;gap:20px;
+    padding:13px 48px;
+    border-top:1px solid var(--border);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:rgba(4,7,18,0.58);
+    flex-shrink:0;
+  }
+  .fi{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .fi strong{color:rgba(255,255,255,0.65);font-weight:600}
+  .fdot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.2)}
+
+  /* ── RESPONSIVE ────────────────────────────────────── */
+  @media(max-width:820px){
+    html,body{overflow:auto}
+    .hero{height:auto;min-height:100vh;overflow:visible}
+    nav{padding:0 20px}
+    .hero-body{padding:36px 20px 44px}
+    .cards{grid-template-columns:1fr;max-width:420px}
+    .hero-footer{flex-wrap:wrap;gap:10px;padding:13px 20px}
+    .hero-bg{animation:none}
+  }
+  @media(max-width:480px){
+    .nav-unit{display:none}
+    .nav-sep{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hero-bg{animation:none}
+    .dash-card,.card-btn{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="accent-line"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-logo-wrap">
+        <img src="Rapid_KL_Logo_svg.png" alt="Rapid KL"
+             onerror="this.parentElement.innerHTML='<span style=\'color:#E31937;font-weight:900;font-size:16px;letter-spacing:-1px\'>rapid<span style=\'color:#0F3460\'>KL</span></span>'">
+      </div>
+      <div class="nav-vdiv"></div>
+      <div>
+        <div class="nav-text-main">Portal Status Permohonan</div>
+        <div class="nav-text-sub">Bus Permit &amp; Licensing</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-unit">
+        <span class="nav-unit-lbl">Unit</span>
+        <span class="nav-unit-val">Bus Permit &amp; Licensing (BPL)</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-unit">
+        <span class="nav-unit-lbl">Jabatan</span>
+        <span class="nav-unit-val">Operation Supports (OS)</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-date">
+        <strong id="navDate">–</strong>
+        <span id="navTime">–</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Body -->
+  <div class="hero-body">
+    <div class="eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-text">Sistem Pemantauan Dalaman</div>
+      <div class="eyebrow-line"></div>
+    </div>
+
+    <h1 class="hero-headline">
+      Dashboard<br> Permohonan <em>APAD</em>
+    </h1>
+    <p class="hero-sub">
+      Pilih projek di bawah untuk melihat status permohonan, analisis data, dan dokumen kelulusan terkini.
+    </p>
+
+    <div class="cards">
+
+      <!-- LRT3 -->
+      <a class="dash-card lrt3" href="dashboard_lrt3.html">
+        <div class="card-icon">🚆</div>
+        <span class="card-tag">Projek LRT 3</span>
+        <div class="card-title">Ubahsyarat Laluan LRT3</div>
+        <div class="card-desc">
+          Pemantauan status permohonan ubahsyarat laluan dan bas bagi projek baharu LRT 3 melibatkan kawasan Klang – Shah Alam – Subang.
+        </div>
+        <div class="card-stats">
+          <div>
+            <div class="cs-val">87</div>
+            <div class="cs-lbl">Jumlah Bas</div>
+          </div>
+          <div>
+            <div class="cs-val">34</div>
+            <div class="cs-lbl">Laluan</div>
+          </div>
+          <div>
+            <div class="cs-val">37%</div>
+            <div class="cs-lbl">Diluluskan</div>
+          </div>
+        </div>
+        <span class="card-btn">Buka Dashboard <span class="btn-arrow">→</span></span>
+      </a>
+
+      <!-- EV -->
+      <a class="dash-card ev" href="dashboard_ev.html">
+        <div class="card-icon">⚡</div>
+        <span class="card-tag">Bas EV</span>
+        <div class="card-title">Ubahsyarat SK Bas EV</div>
+        <div class="card-desc">
+          Pemantauan status permohonan ubahsyarat Surat Kenderaan (SK) bagi fleet bas elektrik (EV), merangkumi jenis Long dan Small.
+        </div>
+        <div class="card-stats">
+          <div>
+            <div class="cs-val">178</div>
+            <div class="cs-lbl">Permohonan</div>
+          </div>
+          <div>
+            <div class="cs-val">157</div>
+            <div class="cs-lbl">Lulus</div>
+          </div>
+          <div>
+            <div class="cs-val">88%</div>
+            <div class="cs-lbl">Kadar Lulus</div>
+          </div>
+        </div>
+        <span class="card-btn">Buka Dashboard <span class="btn-arrow">→</span></span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="hero-footer">
+    <div class="fi"><strong>Rapid KL</strong></div>
+    <div class="fdot"></div>
+    <div class="fi">Unit <strong>Bus Permit &amp; Licensing (BPL)</strong></div>
+    <div class="fdot"></div>
+    <div class="fi">Jabatan <strong>Operation Supports (OS)</strong></div>
+    <div class="fdot"></div>
+    <div class="fi">Hakmilik Terpelihara MFA2026©</div>
+  </div>
+</div>
+
+<script>
+  function tick(){
+    const n=new Date();
+    document.getElementById('navDate').textContent=
+      n.toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('navTime').textContent=
+      n.toLocaleTimeString('ms-MY',{hour:'2-digit',minute:'2-digit'});
+  }
+  tick(); setInterval(tick,60000);
+</script>
+</body>
+</html>

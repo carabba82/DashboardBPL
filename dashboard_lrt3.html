@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Status Permohonan – LRT 3</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --rapid-red:     #E31937;
+    --rapid-dark:    #1A1A2E;
+    --rapid-navy:    #16213E;
+    --rapid-mid:     #0F3460;
+    --rapid-accent:  #E31937;
+    --done-green:    #00B894;
+    --prog-amber:    #F39C12;
+    --bg-page:       #F0F2F7;
+    --bg-card:       #FFFFFF;
+    --text-primary:  #1A1A2E;
+    --text-muted:    #6B7280;
+    --text-light:    #9CA3AF;
+    --border:        #E5E7EB;
+    --shadow-sm:     0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md:     0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-lg:     0 10px 40px rgba(0,0,0,0.14);
+    --radius:        12px;
+    --radius-sm:     8px;
+    --header-h:      80px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, var(--rapid-dark) 0%, var(--rapid-mid) 65%, #1a4080 100%);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.35);
+    height: var(--header-h);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    gap: 20px;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+  /* Logo container — white pill so red+blue logo pops on dark bg */
+  .logo-wrap {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 54px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
+  .logo-wrap img {
+    height: 30px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+  }
+  .header-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255,255,255,0.18);
+    flex-shrink: 0;
+  }
+  .brand-text h1 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+  .brand-text p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .lrt3-badge {
+    background: rgba(227,25,55,0.22);
+    border: 1px solid rgba(227,25,55,0.45);
+    color: #ff8099;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .header-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.48);
+    text-align: right;
+    line-height: 1.4;
+  }
+  .header-date strong {
+    display: block;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* ─── MAIN ────────────────────────────────────────────────── */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 32px 60px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── KPI CARDS ───────────────────────────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .kpi-card.blue::before  { background: var(--rapid-mid); }
+  .kpi-card.red::before   { background: var(--rapid-red); }
+  .kpi-card.green::before { background: var(--done-green); }
+  .kpi-card.amber::before { background: var(--prog-amber); }
+  .kpi-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; font-size: 18px;
+  }
+  .kpi-card.blue  .kpi-icon { background: rgba(15,52,96,0.10); }
+  .kpi-card.red   .kpi-icon { background: rgba(227,25,55,0.10); }
+  .kpi-card.green .kpi-icon { background: rgba(0,184,148,0.10); }
+  .kpi-card.amber .kpi-icon { background: rgba(243,156,18,0.10); }
+  .kpi-value {
+    font-size: 38px; font-weight: 800; line-height: 1;
+    margin-bottom: 4px; letter-spacing: -1px;
+  }
+  .kpi-card.blue  .kpi-value { color: var(--rapid-mid); }
+  .kpi-card.red   .kpi-value { color: var(--rapid-red); }
+  .kpi-card.green .kpi-value { color: var(--done-green); }
+  .kpi-card.amber .kpi-value { color: var(--prog-amber); }
+  .kpi-label { font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+  .kpi-sub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .kpi-pct {
+    position: absolute; bottom: 20px; right: 20px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px;
+  }
+  .kpi-card.green .kpi-pct { background: rgba(0,184,148,0.12); color: var(--done-green); }
+  .kpi-card.amber .kpi-pct { background: rgba(243,156,18,0.12); color: var(--prog-amber); }
+
+  /* ─── PROGRESS BAR ────────────────────────────────────────── */
+  .progress-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 20px;
+  }
+  .progress-label { font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+  .progress-track {
+    flex: 1; height: 10px;
+    background: rgba(243,156,18,0.2);
+    border-radius: 10px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--done-green), #00d2a0);
+    border-radius: 10px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--done-green); white-space: nowrap; }
+
+  /* ─── CHARTS ──────────────────────────────────────────────── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px; margin-bottom: 32px;
+  }
+  .chart-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+  }
+  .chart-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .chart-sub   { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+  .bar-chart-wrap { overflow-x: auto; padding-bottom: 4px; }
+  #barChart { min-width: 700px; width: 100%; }
+  .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  #donutChart { width: 200px; height: 200px; }
+  .donut-legend { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .legend-item { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; margin-right: 8px; flex-shrink: 0;
+  }
+  .legend-left  { display: flex; align-items: center; }
+  .legend-count { font-weight: 700; font-size: 14px; }
+
+  /* ─── SEARCH ──────────────────────────────────────────────── */
+  .search-section { margin-bottom: 32px; }
+  .search-box {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+  }
+  .search-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .search-hint  { font-size: 12px; color: var(--text-muted); margin-top: 2px; margin-bottom: 18px; }
+  .search-input-wrap { display: flex; gap: 10px; margin-bottom: 20px; }
+  .suggestions-wrap  { position: relative; flex: 1; }
+  .search-input {
+    width: 100%; height: 44px;
+    padding: 0 16px 0 44px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-page) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 14px center;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input:focus { border-color: var(--rapid-mid); box-shadow: 0 0 0 3px rgba(15,52,96,0.10); background-color: #fff; }
+  .search-input::placeholder { color: var(--text-light); }
+  .btn-search {
+    height: 44px; padding: 0 22px;
+    background: var(--rapid-mid); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s, transform 0.1s; white-space: nowrap;
+  }
+  .btn-search:hover  { background: #0a2a54; }
+  .btn-search:active { transform: scale(0.98); }
+  .btn-clear {
+    height: 44px; padding: 0 16px;
+    background: transparent; color: var(--text-muted);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all 0.2s;
+  }
+  .btn-clear:hover { border-color: var(--rapid-red); color: var(--rapid-red); background: rgba(227,25,55,0.05); }
+
+  .suggestions {
+    position: absolute; top: 48px; left: 0; right: 0;
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+    z-index: 50; max-height: 220px; overflow-y: auto; display: none;
+  }
+  .suggestions.open { display: block; }
+  .suggestion-item {
+    padding: 10px 14px; cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border); transition: background 0.15s;
+  }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover { background: var(--bg-page); }
+  .suggestion-code {
+    background: rgba(15,52,96,0.08); color: var(--rapid-mid);
+    font-weight: 700; font-size: 11px; padding: 2px 7px;
+    border-radius: 4px; white-space: nowrap;
+  }
+  .suggestion-name { color: var(--text-muted); flex: 1; }
+
+  .result-panel { display: none; border-top: 1px solid var(--border); padding-top: 20px; animation: fadeUp 0.3s ease; }
+  .result-panel.visible { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .result-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 16px; gap: 12px; flex-wrap: wrap;
+  }
+  .result-route-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--rapid-dark); color: #fff;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+  }
+  .result-route-code { background: var(--rapid-red); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .result-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .result-stat-pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill-total { background: rgba(15,52,96,0.08);  color: var(--rapid-mid); }
+  .pill-done  { background: rgba(0,184,148,0.12); color: var(--done-green); }
+  .pill-prog  { background: rgba(243,156,18,0.12);color: var(--prog-amber); }
+
+  .result-table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .result-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .result-table th {
+    background: var(--rapid-dark); color: rgba(255,255,255,0.8);
+    padding: 11px 14px; text-align: left; font-size: 11px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .result-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text-primary); vertical-align: middle; }
+  .result-table tr:last-child td { border-bottom: none; }
+  .result-table tbody tr:nth-child(even) { background: #F8F9FC; }
+  .result-table tbody tr:hover { background: rgba(15,52,96,0.04); }
+
+  .no-result { text-align: center; padding: 40px 20px; color: var(--text-muted); display: none; }
+  .no-result-icon { font-size: 32px; margin-bottom: 10px; }
+  .no-result strong { display: block; color: var(--text-primary); font-size: 14px; margin-bottom: 4px; }
+
+  .bus-no-cell  { font-weight: 700; color: var(--rapid-mid); font-size: 13px; }
+  .submit-no-cell { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-muted); }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .status-done     { background: rgba(0,184,148,0.12); color: var(--done-green); }
+  .status-progress { background: rgba(243,156,18,0.12); color: var(--prog-amber); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .status-done .status-dot     { background: var(--done-green); }
+  .status-progress .status-dot { background: var(--prog-amber); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  /* ─── ALL RECORDS TABLE ───────────────────────────────────── */
+  .all-routes-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 32px;
+  }
+  .all-routes-header {
+    padding: 20px 24px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .all-routes-title { font-size: 14px; font-weight: 700; }
+  .filter-pills { display: flex; gap: 8px; }
+  .filter-pill {
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border); background: transparent;
+    color: var(--text-muted); font-family: 'Inter', sans-serif; transition: all 0.2s;
+  }
+  .filter-pill.active-all  { background: var(--rapid-mid);  color: #fff; border-color: var(--rapid-mid); }
+  .filter-pill.active-done { background: var(--done-green); color: #fff; border-color: var(--done-green); }
+  .filter-pill.active-prog { background: var(--prog-amber); color: #fff; border-color: var(--prog-amber); }
+
+  /* KEY FIX: scrollable container so sticky thead works relative to this div */
+  .main-table-wrap {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 520px;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .main-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .main-table thead tr { position: sticky; top: 0; z-index: 10; }
+  .main-table th {
+    background: var(--rapid-navy);
+    color: rgba(255,255,255,0.78);
+    padding: 12px 16px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap;
+    /* shadow underneath to separate from body rows */
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+  }
+  .main-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .main-table tbody tr:hover { background: rgba(15,52,96,0.03); }
+  .main-table .bil-cell    { color: var(--text-muted); font-size: 12px; width: 50px; }
+  .main-table .code-cell   { font-weight: 700; color: var(--rapid-mid); font-size: 12px; }
+  .main-table .bus-cell    { font-weight: 600; }
+  .main-table .submitno-cell { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-muted); }
+  .main-table .name-cell   { color: var(--text-primary); max-width: 280px; }
+
+  /* ─── PDF GALLERY ─────────────────────────────────────────── */
+  .pdf-section { margin-bottom: 48px; }
+  .pdf-loading {
+    display: flex; align-items: center; gap: 12px;
+    padding: 24px; color: var(--text-muted); font-size: 13px;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--rapid-mid);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .pdf-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .pdf-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+  .pdf-thumb {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #F8F9FC;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .pdf-thumb iframe {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none; pointer-events: none;
+    transform-origin: top left;
+  }
+  .pdf-thumb-icon {
+    font-size: 40px; line-height: 1;
+    position: relative; z-index: 1;
+  }
+  .pdf-thumb-label {
+    font-size: 10px; color: var(--text-muted);
+    font-weight: 500; position: relative; z-index: 1;
+  }
+
+  .pdf-info { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .pdf-name {
+    font-size: 12px; font-weight: 600; color: var(--text-primary);
+    line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pdf-meta { font-size: 11px; color: var(--text-muted); }
+  .pdf-open-btn {
+    margin: 0 14px 12px;
+    padding: 7px 0;
+    background: var(--rapid-mid); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+    width: calc(100% - 28px);
+  }
+  .pdf-open-btn:hover { background: #0a2a54; }
+
+  .pdf-error {
+    background: rgba(227,25,55,0.06);
+    border: 1px solid rgba(227,25,55,0.18);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    font-size: 13px; color: #c0152f;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .pdf-error a { color: var(--rapid-mid); text-decoration: underline; }
+
+  /* ─── PDF MODAL ───────────────────────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,10,20,0.75);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .modal-box {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%; max-width: 900px;
+    max-height: calc(100vh - 48px);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  .modal-header {
+    padding: 16px 20px;
+    background: var(--rapid-dark);
+    color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-shrink: 0;
+  }
+  .modal-title {
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    min-width: 0;
+  }
+  .modal-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .modal-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .modal-btn-ext {
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.12);
+    color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    font-family: 'Inter', sans-serif; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .modal-btn-ext:hover { background: rgba(255,255,255,0.22); }
+  .modal-close {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; color: #fff; font-size: 16px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(227,25,55,0.4); }
+
+  .modal-body {
+    flex: 1; overflow: auto; min-height: 0;
+    background: #1a1a2e;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 16px;
+    position: relative;
+  }
+  .modal-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  /* ─── FOOTER ──────────────────────────────────────────────── */
+  .footer {
+    background: var(--rapid-dark); color: rgba(255,255,255,0.4);
+    text-align: center; padding: 20px;
+    font-size: 11px; letter-spacing: 0.3px;
+  }
+  .footer strong { color: rgba(255,255,255,0.7); }
+
+  /* ─── SCROLLBAR ───────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+  /* ─── RESPONSIVE ──────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .kpi-grid  { grid-template-columns: repeat(2,1fr); }
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .main { padding: 20px 16px 40px; }
+    .header-inner { padding: 0 16px; }
+    .kpi-grid { grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .kpi-value { font-size: 28px; }
+    .brand-text h1 { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="logo-wrap">
+        <img src="Rapid_KL_Logo_svg.png" alt="Rapid KL" onerror="this.parentElement.innerHTML='<span style=\'color:#E31937;font-weight:900;font-size:18px;letter-spacing:-1px\'>rapid<span style=\'color:#0F3460\'>KL</span></span>'">
+      </div>
+      <div class="header-divider"></div>
+      <div class="brand-text">
+        <h1>Status Ubahsyarat Laluan LRT3</h1>
+        <p>Disediakan oleh &nbsp;·&nbsp; MFA2026</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="lrt3-badge">BPL</div>
+      <div class="header-date">
+        <strong id="currentDate">–</strong>
+        Kemaskini Terkini
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- KPI -->
+  <div class="section-label">Ringkasan Keseluruhan</div>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-icon">🛤️</div>
+      <div class="kpi-value" id="kpiLaluan">–</div>
+      <div class="kpi-label">Jumlah Laluan Dimohon</div>
+      <div class="kpi-sub">Mengikut Jumlah No Laluan</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-icon">🚌</div>
+      <div class="kpi-value" id="kpiBas">–</div>
+      <div class="kpi-label">Jumlah Bas Dimohon</div>
+      <div class="kpi-sub">Keseluruhan Jumlah Bas</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-value" id="kpiDone">–</div>
+      <div class="kpi-label">Permohonan Diluluskan</div>
+      <div class="kpi-sub">Status DONE</div>
+      <div class="kpi-pct" id="kpiDonePct">–</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-icon">⏳</div>
+      <div class="kpi-value" id="kpiProg">–</div>
+      <div class="kpi-label">Masih Dalam Proses</div>
+      <div class="kpi-sub">Status IN PROGRESS</div>
+      <div class="kpi-pct" id="kpiProgPct">–</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-section">
+    <span class="progress-label">Peratusan Kelulusan</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+
+  <!-- Charts -->
+  <div class="section-label">Graf Analisis</div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Bilangan Bas Mengikut Laluan</div>
+      <div class="chart-sub">Setiap bar mewakili jumlah bas dalam satu kod laluan</div>
+      <div class="bar-chart-wrap">
+        <canvas id="barChart" height="260"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Status Permohonan</div>
+      <div class="chart-sub">Peratusan kelulusan keseluruhan</div>
+      <div class="donut-wrap">
+        <canvas id="donutChart"></canvas>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-left">
+              <span class="legend-dot" style="background:var(--done-green)"></span>
+              <span>Telah Diluluskan APAD</span>
+            </div>
+            <span class="legend-count" style="color:var(--done-green)" id="lgDone">–</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-left">
+              <span class="legend-dot" style="background:var(--prog-amber)"></span>
+              <span>Dalam Proses APAD</span>
+            </div>
+            <span class="legend-count" style="color:var(--prog-amber)" id="lgProg">–</span>
+          </div>
+          <div class="legend-item" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px;">
+            <div class="legend-left">
+              <span class="legend-dot" style="background:var(--text-light)"></span>
+              <span style="font-weight:600">Jumlah</span>
+            </div>
+            <span class="legend-count" id="lgTotal">–</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="section-label">Carian Laluan</div>
+  <div class="search-section">
+    <div class="search-box">
+      <div class="search-title">🔍 Cari Maklumat Laluan &amp; Bas</div>
+      <div class="search-hint">Taip kod laluan (contoh: T707B) atau nama laluan untuk melihat semua bas dan butiran permohonan</div>
+      <div class="search-input-wrap">
+        <div class="suggestions-wrap">
+          <input type="text" class="search-input" id="searchInput" placeholder="Cari Kod Laluan atau Nama..." autocomplete="off">
+          <div class="suggestions" id="suggestionBox"></div>
+        </div>
+        <button class="btn-search" onclick="doSearch()">Cari</button>
+        <button class="btn-clear"  onclick="clearSearch()">Kosongkan</button>
+      </div>
+      <div class="no-result" id="noResult">
+        <div class="no-result-icon">🔎</div>
+        <strong>Tiada rekod dijumpai</strong>
+        Semak semula Kod Laluan atau nama laluan yang dicari
+      </div>
+      <div class="result-panel" id="resultPanel">
+        <div class="result-header">
+          <div class="result-route-badge">
+            <span class="result-route-code" id="resultCode">–</span>
+            <span id="resultName">–</span>
+          </div>
+          <div class="result-stats">
+            <span class="result-stat-pill pill-total" id="statTotal">–</span>
+            <span class="result-stat-pill pill-done"  id="statDone">–</span>
+            <span class="result-stat-pill pill-prog"  id="statProg">–</span>
+          </div>
+        </div>
+        <div class="result-table-wrap">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>No.</th><th>No. Bas</th><th>Tarikh Submit</th>
+                <th>No. Permohonan</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="resultBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Records Table -->
+  <div class="section-label">Senarai Penuh Permohonan</div>
+  <div class="all-routes-section">
+    <div class="all-routes-header">
+      <div class="all-routes-title">
+        Semua Rekod Permohonan
+        <span style="color:var(--text-muted);font-weight:400;font-size:12px;margin-left:6px" id="tableCount"></span>
+      </div>
+      <div class="filter-pills">
+        <button class="filter-pill active-all" onclick="filterTable('all',this)">Semua</button>
+        <button class="filter-pill" onclick="filterTable('DONE',this)">✅ Diluluskan</button>
+        <button class="filter-pill" onclick="filterTable('IN PROGRESS',this)">⏳ Dalam Proses</button>
+      </div>
+    </div>
+    <div class="main-table-wrap">
+      <table class="main-table" id="mainTable">
+        <thead>
+          <tr>
+            <th>BIL</th>
+            <th>Kod Laluan</th>
+            <th>Nama Laluan</th>
+            <th>No. Bas</th>
+            <th>Tarikh Submit</th>
+            <th>No. Permohonan</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="mainTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Dokumen Kelulusan Gallery -->
+  <div class="section-label">Dokumen Kelulusan</div>
+  <div class="pdf-section">
+    <div id="pdfContainer"></div>
+  </div>
+
+</main>
+
+<!-- ═══ IMAGE MODAL ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="pdfModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span>📄</span>
+        <span id="modalTitle">–</span>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-close" onclick="closeModalDirect()" title="Tutup">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <img id="modalImg" src="" alt="Surat Kelulusan"
+           style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>Rapid KL</strong> &nbsp;·&nbsp; Dashboard Status Permohonan Ubahsyarat Laluan Baharu LRT 3 &nbsp;·&nbsp; Data dikemaskini secara manual
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const RAW = [
+  [1,"T707B","LRT Johan Setia Pintu B - Bandar Bestari","RAPID230",46142,"202604303241932864","DONE"],
+  [2,"T707B","LRT Johan Setia Pintu B - Bandar Bestari","RAPID231",46142,"202604303241932912","IN PROGRESS"],
+  [3,"T707B","LRT Johan Setia Pintu B - Bandar Bestari","RAPID234",46142,"202604303241932953","IN PROGRESS"],
+  [4,"T708B","LRT Johan Setia Pintu B-Teluk Panglima Garang","RAPID269",46142,"202604303241932968","IN PROGRESS"],
+  [5,"T708B","LRT Johan Setia Pintu B-Teluk Panglima Garang","RAPID270",46142,"202604303241932982","IN PROGRESS"],
+  [6,"T708B","LRT Johan Setia Pintu B-Teluk Panglima Garang","RAPID271",46142,"202604303241932996","IN PROGRESS"],
+  [7,"T708B","LRT Johan Setia Pintu B-Teluk Panglima Garang","RAPID272",46142,"202604303241933022","IN PROGRESS"],
+  [8,"T709B","LRT Johan Setia Pintu B - Rimbayu","RAPID299",46142,"202604303241933036","DONE"],
+  [9,"T709B","LRT Johan Setia Pintu B - Rimbayu","RAPID300",46142,"202604303241933896","DONE"],
+  [10,"T709B","LRT Johan Setia Pintu B - Rimbayu","RAPID301",46142,"202604303241933897","DONE"],
+  [11,"T710B","LRT Johan Setia Pintu B - Taman Pendamar Indah","RAPID303",46142,"202604303241933898","IN PROGRESS"],
+  [12,"T710B","LRT Johan Setia Pintu B - Taman Pendamar Indah","RAPID304",46142,"202604303241933900","DONE"],
+  [13,"T710B","LRT Johan Setia Pintu B - Taman Pendamar Indah","RAPID305",46142,"202604303241933903","DONE"],
+  [14,"T711B","LRT Bandar Bukit Tinggi Pintu B - Bandar Puteri","RAPID307",46142,"202604303241933905","IN PROGRESS"],
+  [15,"T711B","LRT Bandar Bukit Tinggi Pintu B - Bandar Puteri","RAPID309",46142,"202604303241933916","IN PROGRESS"],
+  [16,"T714B","LRT Bandar Bukit Tinggi Pintu A - Bandar Botanik","RAPID311",46142,"202604303241933933","IN PROGRESS"],
+  [17,"T714B","LRT Bandar Bukit Tinggi Pintu A - Bandar Botanik","RAPID313",46142,"202604303241933951","DONE"],
+  [18,"T714B","LRT Bandar Bukit Tinggi Pintu A - Bandar Botanik","RAPID315",46142,"202604303241933954","IN PROGRESS"],
+  [19,"T717B","LRT Bandar Bukit Tinggi Pintu A - Bandar Bukit Tinggi","RAPID316",46142,"202604303241933959","IN PROGRESS"],
+  [20,"T717B","LRT Bandar Bukit Tinggi Pintu A - Bandar Bukit Tinggi","RAPID318",46142,"202604303241933961","IN PROGRESS"],
+  [21,"T718B","LRT Klang Jaya Pintu A - Taman Klang Ria","RAPID105",46143,"202605013241934008","IN PROGRESS"],
+  [22,"T718B","LRT Klang Jaya Pintu A - Taman Klang Ria","RAPID108",46143,"202605013241934009","IN PROGRESS"],
+  [23,"T719","LRT Klang Jaya Pintu A - Taman Kota Pendamar","RAPID419",46143,"202605013241934010","DONE"],
+  [24,"T719","LRT Klang Jaya Pintu A - Taman Kota Pendamar","RAPID420",46143,"202605013241934011","IN PROGRESS"],
+  [25,"T720B","LRT Sri Andalas Pintu B - Taman Sri Andalas","RAPID137",46143,"202605013241934030","DONE"],
+  [26,"T720B","LRT Sri Andalas Pintu B - Taman Sri Andalas","RAPID139",46143,"202605013241934035","IN PROGRESS"],
+  [27,"T721","LRT Taman Selatan Pintu A - Pandamaran","RAPID422",46143,"202605013241934438","IN PROGRESS"],
+  [28,"T721","LRT Taman Selatan Pintu A - Pandamaran","RAPID423",46143,"202605013241934449","IN PROGRESS"],
+  [29,"T722","LRT Pasar Jawa Pintu B - Kg Sg Kandis","RAPID425",46143,"202605013241934467","DONE"],
+  [30,"T722","LRT Pasar Jawa Pintu B - Kg Sg Kandis","RAPID426",46143,"202605013241934490","DONE"],
+  [31,"T723B","LRT Pasar Jawa Pintu B - Teluk Gadong","RAPID222",46143,"202605013241934520","DONE"],
+  [32,"T723B","LRT Pasar Jawa Pintu B - Teluk Gadong","RAPID223",46143,"202605013241934525","IN PROGRESS"],
+  [33,"T723B","LRT Pasar Jawa Pintu B - Teluk Gadong","RAPID224",46143,"202605013241934529","IN PROGRESS"],
+  [34,"T724B","LRT Pasar Jawa Pintu B - Taman Summit","RAPID225",46143,"202605013241934533","IN PROGRESS"],
+  [35,"T724B","LRT Pasar Jawa Pintu B - Taman Summit","RAPID248",46143,"202605013241934534","DONE"],
+  [36,"T725","LRT Pasar Jawa Pintu B - Kg Sungai Udang","RAPID428",46143,"202605013241934541","DONE"],
+  [37,"T725","LRT Pasar Jawa Pintu B - Kg Sungai Udang","RAPID429",46143,"202605013241934542","IN PROGRESS"],
+  [38,"T725","LRT Pasar Jawa Pintu B - Kg Sungai Udang","RAPID430",46143,"202605013241934543","IN PROGRESS"],
+  [39,"T726B","LRT Jalan Meru Pintu A - Taman Eng Ann","RAPID249",46143,"202605013241934544","IN PROGRESS"],
+  [40,"T726B","LRT Jalan Meru Pintu A - Taman Eng Ann","RAPID250",46143,"202605013241934545","DONE"],
+  [41,"T727B","LRT Jalan Meru Pintu A - Batu Belah","RAPID251",46154,"202605123241946782","DONE"],
+  [42,"T727B","LRT Jalan Meru Pintu A - Batu Belah","RAPID252",46143,"202605013241934547","IN PROGRESS"],
+  [43,"T728","LRT Pasar Klang Pintu B - Setia City Mall","RAPID431",46143,"202605013241934548","DONE"],
+  [44,"T728","LRT Pasar Klang Pintu B - Setia City Mall","RAPID432",46143,"202605013241934550","IN PROGRESS"],
+  [45,"T728","LRT Pasar Klang Pintu B - Setia City Mall","RAPID433",46143,"202605013241934551","IN PROGRESS"],
+  [46,"T728","LRT Pasar Klang Pintu B - Setia City Mall","RAPID434",46143,"202605013241934552","IN PROGRESS"],
+  [47,"T729","LRT Pasar Klang Pintu B - Bandar Bukit Raja","RAPID439",46144,"202605023241934575","DONE"],
+  [48,"T729","LRT Pasar Klang Pintu B - Bandar Bukit Raja","RAPID440",46144,"202605023241934576","DONE"],
+  [49,"T729","LRT Pasar Klang Pintu B - Bandar Bukit Raja","RAPID441",46144,"202605023241934577","IN PROGRESS"],
+  [50,"T732B","LRT Bandar Baru Klang Pintu A - Taman Berkeley","RAPID255",46144,"202605023241934578","IN PROGRESS"],
+  [51,"T732B","LRT Bandar Baru Klang Pintu A - Taman Berkeley","RAPID256",46144,"202605013241934546","DONE"],
+  [52,"T733B","LRT Seksyen 7 - Padang Jawa","RAPID257",46148,"202605063241940843","IN PROGRESS"],
+  [53,"T733B","LRT Seksyen 7 - Padang Jawa","RAPID258",46148,"202605063241940846","IN PROGRESS"],
+  [54,"T734B","LRT Seksyen 7 - U12 Cahaya Alam","RAPID259",46154,"202605123241946763","IN PROGRESS"],
+  [55,"T734B","LRT Seksyen 7 - U12 Cahaya Alam","RAPID260",46154,"202605123241946768","IN PROGRESS"],
+  [56,"T753B","LRT Dato Menteri Pintu B - Seksyen 8","RAPID443",46144,"202605023241934580","DONE"],
+  [57,"T753","LRT Dato Menteri Pintu B - Seksyen 8","RAPID444",46144,"202605023241934581","IN PROGRESS"],
+  [58,"T753","LRT Dato Menteri Pintu B - Seksyen 8","RAPID445",46144,"202605023241934582","DONE"],
+  [59,"T754B","LRT Dato Menteri - KTM Shah Alam","RAPID263",46148,"202605063241940854","IN PROGRESS"],
+  [60,"T754B","LRT Dato Menteri - KTM Shah Alam","RAPID264",46148,"202605063241940856","IN PROGRESS"],
+  [61,"T761B","LRT Stadium Shah Alam - Seksyen 13","RAPID265",46148,"202605063241940858","IN PROGRESS"],
+  [62,"T761B","LRT Stadium Shah Alam - Seksyen 13","RAPID266",46148,"202605063241940862","IN PROGRESS"],
+  [63,"T761B","LRT Stadium Shah Alam - Seksyen 13","RAPID267",46148,"202605063241940865","IN PROGRESS"],
+  [64,"T762","LRT Dato Menteri Pintu A - Bukit Bandaraya","RAPID446",46144,"202605023241934585","IN PROGRESS"],
+  [65,"T762","LRT Dato Menteri Pintu A - Bukit Bandaraya","RAPID447",46144,"202605023241934587","DONE"],
+  [66,"T762","LRT Dato Menteri Pintu A - Bukit Bandaraya","RAPID448",46144,"202605023241934592","IN PROGRESS"],
+  [67,"T762","LRT Dato Menteri Pintu A - Bukit Bandaraya","RAPID449",46144,"202605023241934594","DONE"],
+  [68,"T763B","LRT UiTM Shah Alam - Terminal S17","RAPID261",46148,"202605063241940867","DONE"],
+  [69,"T763B","LRT UiTM Shah Alam - Terminal S17","RAPID262",46148,"202605063241940869","IN PROGRESS"],
+  [70,"T764","LRT UiTM Shah Alam Pintu B - Seksyen 24","RAPID450",46144,"202605023241934597","DONE"],
+  [71,"T764","LRT UiTM Shah Alam Pintu B - Seksyen 24","RAPID451",46144,"202605023241934598","DONE"],
+  [72,"T764","LRT UiTM Shah Alam Pintu B - Seksyen 24","RAPID452",46144,"202605023241934599","IN PROGRESS"],
+  [73,"T764","LRT UiTM Shah Alam Pintu B - Seksyen 24","RAPID453",46144,"202605023241934601","IN PROGRESS"],
+  [74,"T765","LRT Seksyen 7 Pintu B - UiTM","RAPID454",46144,"202605023241934848","IN PROGRESS"],
+  [75,"T765","LRT Seksyen 7 Pintu B - UiTM","RAPID455",46144,"202605023241934850","IN PROGRESS"],
+  [76,"T775B","LRT Glenmarie 2 - Temasya Glenmarie","RAPID274",46148,"202605063241940875","IN PROGRESS"],
+  [77,"T775B","LRT Glenmarie 2 - Temasya Glenmarie","RAPID275",46148,"202605063241940876","DONE"],
+  [78,"T775B","LRT Glenmarie 2 - Temasya Glenmarie","RAPID276",46148,"202605063241940877","IN PROGRESS"],
+  [79,"T779","LRT Kerjaya Pintu B - Subang Hitech","RAPID456",46144,"202605023241934851","DONE"],
+  [80,"T779","LRT Kerjaya Pintu B - Subang Hitech","RAPID457",46144,"202605023241934852","IN PROGRESS"],
+  [81,"T779","LRT Kerjaya Pintu B - Subang Hitech","RAPID458",46144,"202605023241934853","IN PROGRESS"],
+  [82,"T780","LRT BU 11 Pintu B - LRT Kelana Jaya","RAPID460",46144,"202605023241934854","IN PROGRESS"],
+  [83,"T780","LRT BU 11 Pintu B - LRT Kelana Jaya","RAPID461",46144,"202605023241934855","DONE"],
+  [84,"T780","LRT BU 11 Pintu B - LRT Kelana Jaya","RAPID462",46144,"202605023241934857","IN PROGRESS"],
+  [85,"T781","LRT Kelana Jaya - LRT SS7 Pintu B","RAPID463",46144,"202605023241934858","DONE"],
+  [86,"T781","LRT Kelana Jaya - LRT SS7 Pintu B","RAPID464",46144,"202605023241934860","DONE"],
+  [87,"T781","LRT Kelana Jaya - LRT SS7 Pintu B","RAPID465",46144,"202605023241934861","DONE"]
+];
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+function excelDateToStr(s) {
+  const d = new Date(new Date(1900,0,1).getTime() + (s-2)*86400000);
+  return [d.getDate(),d.getMonth()+1,d.getFullYear()].map((v,i)=>i<2?String(v).padStart(2,'0'):v).join('/');
+}
+function statusBadge(st) {
+  return st==='DONE'
+    ? `<span class="status-badge status-done"><span class="status-dot"></span>Diluluskan</span>`
+    : `<span class="status-badge status-progress"><span class="status-dot"></span>Dalam Proses</span>`;
+}
+function fmtSize(bytes) {
+  if (!bytes) return '';
+  const mb = bytes/1048576;
+  return mb>=1 ? mb.toFixed(1)+' MB' : Math.round(bytes/1024)+' KB';
+}
+
+// ══════════════════════════════════════════════════════
+//  DATA PREP
+// ══════════════════════════════════════════════════════
+const data     = RAW.map(r=>({bil:r[0],code:r[1],name:r[2],bus:r[3],dateSerial:r[4],dateStr:excelDateToStr(r[4]),submitNo:r[5],status:r[6]}));
+const routes   = [...new Set(data.map(d=>d.code))];
+const totalBas = data.length;
+const doneCnt  = data.filter(d=>d.status==='DONE').length;
+const progCnt  = data.filter(d=>d.status==='IN PROGRESS').length;
+const donePct  = Math.round(doneCnt/totalBas*100);
+
+// Date
+document.getElementById('currentDate').textContent =
+  new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'});
+
+// ══════════════════════════════════════════════════════
+//  KPI
+// ══════════════════════════════════════════════════════
+document.getElementById('kpiLaluan').textContent = routes.length;
+document.getElementById('kpiBas').textContent    = totalBas;
+document.getElementById('kpiDone').textContent   = doneCnt;
+document.getElementById('kpiProg').textContent   = progCnt;
+document.getElementById('kpiDonePct').textContent= donePct+'%';
+document.getElementById('kpiProgPct').textContent= (100-donePct)+'%';
+document.getElementById('lgDone').textContent    = doneCnt+' bas';
+document.getElementById('lgProg').textContent    = progCnt+' bas';
+document.getElementById('lgTotal').textContent   = totalBas+' bas';
+setTimeout(()=>{ document.getElementById('progressFill').style.width=donePct+'%'; document.getElementById('progressPct').textContent=donePct+'%'; },300);
+
+// ══════════════════════════════════════════════════════
+//  BAR CHART
+// ══════════════════════════════════════════════════════
+new Chart(document.getElementById('barChart'),{
+  type:'bar',
+  data:{
+    labels:routes,
+    datasets:[
+      {label:'Diluluskan (DONE)',data:routes.map(c=>data.filter(d=>d.code===c&&d.status==='DONE').length),backgroundColor:'#00B894',borderRadius:4,borderSkipped:false},
+      {label:'Dalam Proses',     data:routes.map(c=>data.filter(d=>d.code===c&&d.status==='IN PROGRESS').length),backgroundColor:'#F39C12',borderRadius:4,borderSkipped:false}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'top',labels:{font:{family:'Inter',size:12},boxWidth:10,boxHeight:10,padding:16,usePointStyle:true,pointStyle:'circle'}},
+      tooltip:{backgroundColor:'#1A1A2E',titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},padding:10,cornerRadius:8,
+        callbacks:{title:c=>c[0].label,label:c=>` ${c.dataset.label}: ${c.raw} bas`}}
+    },
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{font:{family:'Inter',size:10},color:'#6B7280'}},
+      y:{stacked:true,beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{family:'Inter',size:11},color:'#6B7280',stepSize:1}}
+    }
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  DONUT CHART
+// ══════════════════════════════════════════════════════
+new Chart(document.getElementById('donutChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Diluluskan (DONE)','Dalam Proses'],
+    datasets:[{data:[doneCnt,progCnt],backgroundColor:['#00B894','#F39C12'],borderColor:['#fff','#fff'],borderWidth:3,hoverOffset:8}]
+  },
+  options:{
+    responsive:false,cutout:'68%',
+    plugins:{legend:{display:false},
+      tooltip:{backgroundColor:'#1A1A2E',titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},padding:10,cornerRadius:8,
+        callbacks:{label:c=>` ${c.label}: ${c.raw} bas (${Math.round(c.raw/totalBas*100)}%)`}}
+    }
+  },
+  plugins:[{id:'ct',beforeDraw(ch){
+    const{ctx,chartArea:{left,top,right,bottom}}=ch,cx=(left+right)/2,cy=(top+bottom)/2;
+    ctx.save();ctx.textAlign='center';
+    ctx.fillStyle='#1A1A2E';ctx.font='bold 28px Inter';ctx.fillText(donePct+'%',cx,cy+4);
+    ctx.fillStyle='#9CA3AF';ctx.font='500 11px Inter';ctx.fillText('Diluluskan',cx,cy+20);
+    ctx.restore();
+  }}]
+});
+
+// ══════════════════════════════════════════════════════
+//  MAIN TABLE
+// ══════════════════════════════════════════════════════
+function renderMainTable(f){
+  const rows = f==='all' ? data : data.filter(d=>d.status===f);
+  document.getElementById('tableCount').textContent=`(${rows.length} rekod)`;
+  document.getElementById('mainTableBody').innerHTML=rows.map(d=>`
+    <tr>
+      <td class="bil-cell">${d.bil}</td>
+      <td class="code-cell">${d.code}</td>
+      <td class="name-cell">${d.name}</td>
+      <td class="bus-cell">${d.bus}</td>
+      <td>${d.dateStr}</td>
+      <td class="submitno-cell">${d.submitNo}</td>
+      <td>${statusBadge(d.status)}</td>
+    </tr>`).join('');
+}
+function filterTable(f,btn){
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active-all','active-done','active-prog'));
+  btn.classList.add(f==='all'?'active-all':f==='DONE'?'active-done':'active-prog');
+  renderMainTable(f);
+}
+renderMainTable('all');
+
+// ══════════════════════════════════════════════════════
+//  SEARCH
+// ══════════════════════════════════════════════════════
+const routeMap  = {};
+data.forEach(d=>{ if(!routeMap[d.code]) routeMap[d.code]=d.name; });
+const routeList = Object.entries(routeMap).map(([code,name])=>({code,name}));
+const searchInput   = document.getElementById('searchInput');
+const suggestionBox = document.getElementById('suggestionBox');
+
+searchInput.addEventListener('input',()=>{
+  const q=searchInput.value.trim().toLowerCase();
+  if(!q){suggestionBox.classList.remove('open');return;}
+  const m=routeList.filter(r=>r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q)).slice(0,8);
+  if(!m.length){suggestionBox.classList.remove('open');return;}
+  suggestionBox.innerHTML=m.map(r=>`<div class="suggestion-item" onclick="selectRoute('${r.code}')"><span class="suggestion-code">${r.code}</span><span class="suggestion-name">${r.name}</span></div>`).join('');
+  suggestionBox.classList.add('open');
+});
+searchInput.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();if(e.key==='Escape')suggestionBox.classList.remove('open');});
+document.addEventListener('click',e=>{if(!e.target.closest('.suggestions-wrap'))suggestionBox.classList.remove('open');});
+
+function selectRoute(code){searchInput.value=code;suggestionBox.classList.remove('open');doSearch();}
+
+function doSearch(){
+  const q=searchInput.value.trim().toLowerCase();
+  suggestionBox.classList.remove('open');
+  const rp=document.getElementById('resultPanel'), nr=document.getElementById('noResult');
+  if(!q){rp.classList.remove('visible');nr.style.display='none';return;}
+  const m=data.filter(d=>d.code.toLowerCase().includes(q)||d.name.toLowerCase().includes(q)||d.bus.toLowerCase().includes(q));
+  if(!m.length){rp.classList.remove('visible');nr.style.display='block';return;}
+  nr.style.display='none';
+  const dN=m.filter(d=>d.status==='DONE').length, pN=m.filter(d=>d.status==='IN PROGRESS').length;
+  document.getElementById('resultCode').textContent=m[0].code;
+  document.getElementById('resultName').textContent=m[0].name;
+  document.getElementById('statTotal').textContent=`${m.length} Bas`;
+  document.getElementById('statDone').textContent=`✅ ${dN} Diluluskan`;
+  document.getElementById('statProg').textContent=`⏳ ${pN} Dalam Proses`;
+  document.getElementById('resultBody').innerHTML=m.map((d,i)=>`
+    <tr><td>${i+1}</td><td class="bus-no-cell">${d.bus}</td><td>${d.dateStr}</td>
+    <td class="submit-no-cell">${d.submitNo}</td><td>${statusBadge(d.status)}</td></tr>`).join('');
+  rp.classList.remove('visible');void rp.offsetWidth;rp.classList.add('visible');
+  setTimeout(()=>rp.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+function clearSearch(){
+  searchInput.value='';suggestionBox.classList.remove('open');
+  document.getElementById('resultPanel').classList.remove('visible');
+  document.getElementById('noResult').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════
+//  DOKUMEN KELULUSAN – LOCAL IMAGE GALLERY
+// ══════════════════════════════════════════════════════
+const APPROVAL_DOCS = [
+  { bus: 'RAPID300', file: 'RAPID300_page-0001.jpg', route: 'T709B', routeName: 'LRT Johan Setia Pintu B - Rimbayu',              date: '09/06/2026' },
+  { bus: 'RAPID304', file: 'RAPID304_page-0001.jpg', route: 'T710B', routeName: 'LRT Johan Setia Pintu B - Taman Pendamar Indah', date: '09/06/2026' },
+  { bus: 'RAPID313', file: 'RAPID313_page-0001.jpg', route: 'T714B', routeName: 'LRT Bandar Bukit Tinggi Pintu A - Bandar Botanik',date: '09/06/2026' },
+  { bus: 'RAPID450', file: 'RAPID450_page-0001.jpg', route: 'T764',  routeName: 'LRT UiTM Shah Alam Pintu B - Seksyen 24',        date: '09/06/2026' },
+  { bus: 'RAPID464', file: 'RAPID464_page-0001.jpg', route: 'T781',  routeName: 'LRT Kelana Jaya - LRT SS7 Pintu B',              date: '09/06/2026' },
+];
+
+(function renderDocGallery() {
+  const container = document.getElementById('pdfContainer');
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+      <p style="font-size:13px;color:var(--text-muted);">
+        ${APPROVAL_DOCS.length} surat kelulusan APAD tersedia. Klik kad untuk pratonton penuh.
+      </p>
+      <span style="padding:5px 14px;background:rgba(0,184,148,0.10);color:var(--done-green);border-radius:20px;font-size:12px;font-weight:600;">
+        ✅ Diluluskan
+      </span>
+    </div>
+    <div class="pdf-grid">
+      ${APPROVAL_DOCS.map((doc, i) => `
+        <div class="pdf-card" onclick="openImgModal(${i})">
+          <div class="pdf-thumb" style="background:#f3f4f6;">
+            <img
+              src="${doc.file}"
+              alt="Surat Kelulusan ${doc.bus}"
+              style="width:100%;height:100%;object-fit:cover;display:block;"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#f8f9fc;">
+              <span style="font-size:36px;">📄</span>
+              <span style="font-size:10px;color:var(--text-muted);">Surat Kelulusan</span>
+            </div>
+          </div>
+          <div class="pdf-info">
+            <div class="pdf-name">${doc.bus}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+              <span style="background:rgba(15,52,96,0.08);color:var(--rapid-mid);font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">${doc.route}</span>
+            </div>
+            <div class="pdf-meta" style="margin-top:4px;line-height:1.4;">${doc.routeName}</div>
+            <div class="pdf-meta" style="margin-top:2px;">Tarikh: ${doc.date}</div>
+          </div>
+          <button class="pdf-open-btn" onclick="event.stopPropagation();openImgModal(${i})">
+            🔍 Pratonton Surat
+          </button>
+        </div>`).join('')}
+    </div>`;
+})();
+
+// ── Image Modal ─────────────────────────────────────────
+function openImgModal(idx) {
+  const doc = APPROVAL_DOCS[idx];
+  document.getElementById('modalTitle').textContent = `Surat Kelulusan ${doc.bus} – Laluan ${doc.route}`;
+  const img = document.getElementById('modalImg');
+  img.src = doc.file;
+  img.alt = `Surat Kelulusan ${doc.bus}`;
+
+  // Navigation buttons — inject if not yet present
+  let nav = document.getElementById('modalNav');
+  if (!nav) {
+    nav = document.createElement('div');
+    nav.id = 'modalNav';
+    nav.style.cssText = 'position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:10;';
+    document.getElementById('modalBody').style.position = 'relative';
+    document.getElementById('modalBody').appendChild(nav);
+  }
+  nav.innerHTML = `
+    <button onclick="openImgModal(${idx>0?idx-1:APPROVAL_DOCS.length-1})"
+      style="padding:7px 18px;background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+      ← Sebelum
+    </button>
+    <span style="color:rgba(255,255,255,0.6);font-size:12px;">${idx+1} / ${APPROVAL_DOCS.length}</span>
+    <button onclick="openImgModal(${idx<APPROVAL_DOCS.length-1?idx+1:0})"
+      style="padding:7px 18px;background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+      Seterus →
+    </button>`;
+
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModalDirect() {
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('modalImg').src = '';
+  document.body.style.overflow = '';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('pdfModal')) closeModalDirect();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalDirect();
+});
+</script>
+</body>
+</html>
